@@ -24,24 +24,27 @@ const SystemCheckPage = () => {
   const [internetSpeedData, setInternetSpeedData] = useState([]);
   const [miCheckData, setMiCheckData] = useState([]);
   const [brightnessData, setBrightnessData] = useState([]);
+  const [alert, setAlert] = useState(()=>{});
 
-  // useEffect(()=>{console.log("onWebam",turnOnWebam)},[turnOnWebam])
+  // useEffect(() => {}, [turnOnWebam]);
 
-  useEffect(() => {
+ useEffect(() => {
     // if (isCheckDone) setTurnOnWebcam(false);
-    if (isCheckDone) {
+    const newAlert = () => {if (isCheckDone) {
       if (findMostFrequent(miCheckData) !== false && findMostFrequent(objectData) === "person" && findMostFrequent(brightnessData) !== "low" && calculateMean(internetSpeedData) >= 600) {
         setIsModalOpen(true);
       } else if (findMostFrequent(objectData) !== "person") {
-        <Alert message="Error" description="Camera cannot detect you, please position properly and keep camera on" type="error" showIcon />;
+        return <Alert closable message="Error" description="Camera cannot detect you, please position properly and keep camera on" type="error" showIcon />;
       } else if (findMostFrequent(miCheckData) === false) {
-        <Alert message="Error" description="Please check your mic and ensure your mic is unmuted" type="error" showIcon />;
+        return <Alert closable message="Error" description="Please check your mic and ensure your mic is unmuted" type="error" showIcon />;
       } else if (findMostFrequent(brightnessData) === "low") {
-        <Alert message="Error" description="Please check that your area has good lighting" type="error" showIcon />;
+        return <Alert closable message="Error" description="Please check that your area has good lighting" type="error" showIcon />;
       } else if (calculateMean(internetSpeedData) < 600) {
-        <Alert message="Error" description="Please check your internet connection" type="error" showIcon />;
+        return <Alert closable message="Error" description="Please check your internet connection" type="error" showIcon />;
       }
-    }
+   }
+   }
+   setAlert(newAlert())
   }, [brightnessData, internetSpeedData, isCheckDone, miCheckData, objectData]);
 
   // ANALYZING DATA
@@ -96,8 +99,6 @@ const SystemCheckPage = () => {
       // Make Detections
       const obj = await net.detect(video);
       setObjectData((prev) => [...prev, obj[0] ? obj[0].class : "none"]);
-
-      console.log("object detected data", obj);
     }
   };
 
@@ -234,8 +235,8 @@ const SystemCheckPage = () => {
     });
 
     await Promise.all([cameraPromise, lightingPromise, micPromise, objPromise, internetPromise]);
-    setIsCheckDone(true);
     setTurnOnWebcam(false);
+    setIsCheckDone(true);
     setAnalyzing(false);
   };
 
@@ -243,6 +244,7 @@ const SystemCheckPage = () => {
 
   return (
     <>
+      {alert}
       <Modal open={isModalOpen} title="Start Assessment" cancelButtonProps={{ className: "hidden" }} closable={false} footer={null}>
         <h1 className="text-[var(--app-purple)] text-2xl font-bold text-center">Proceed to start assessment</h1>
         <p className="text-center text-sm">Kindly keep to the rules of the assessment and sit up, stay in front of your camera/webcam and start your assessment.</p>
@@ -254,6 +256,7 @@ const SystemCheckPage = () => {
               setObjectData([]);
               setMiCheckData([]);
               setIsCheckDone(false);
+              // setTurnOnWebcam(false);
               setIsModalOpen(false);
             }}
             className="bg-[var(--app-purple)] text-white text-xs py-2 px-3 rounded-md ml-auto">
@@ -269,7 +272,7 @@ const SystemCheckPage = () => {
 
         <div className="flex  gap-6 ">
           <div className="relative h-40 w-[275px]">
-            {turnOnWebam && <Webcam ref={webcamRef} className="border rounded-[10px] border-[var(--app-purple)] h-40 w-[275px] absolute " />} <canvas ref={canvasRef} className="border rounded-[10px] border-[var(--app-purple)] h-40 w-[275px] absolute " />
+            {turnOnWebam ? <Webcam ref={webcamRef} className="border rounded-[10px] border-[var(--app-purple)] h-40 w-[275px] absolute " /> : <div></div>} <canvas ref={canvasRef} className="border rounded-[10px] border-[var(--app-purple)] h-40 w-[275px] absolute " />
           </div>
 
           <div className="relative grid grid-cols-2 gap-3 mr-8">
@@ -288,16 +291,8 @@ const SystemCheckPage = () => {
             handleSystemCheck();
           }}
           title="Take picture and continue">
-          Take picture and continue
+          {analyzing ? "Analyzing" : "Take picture and continue"}
         </Button>
-        {/* <button
-        className="border bg-[var(--app-purple)] text-white rounded-md px-4 py-2 w-fit text-sm"
-        onClick={() => {
-          setTurnOnWebcam(true);
-          handleSystemCheck();
-        }}>
-        Take picture and continue
-      </button> */}
       </div>
     </>
   );
