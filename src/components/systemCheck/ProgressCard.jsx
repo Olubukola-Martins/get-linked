@@ -9,17 +9,6 @@ const ProgressCard = ({ result = "pass" || "fail" || "average", parameter = "Web
       return "/images/check.svg";
     } else return "/images/fail.svg";
 
-    // if (checkComplete !== true) {
-    //   if (parameter === "Lighting") {
-    //     return "/images/lighting.svg";
-    //   } else if (parameter === "Speed") {
-    //     return "/images/internet.svg";
-    //   } else return "/images/webcam.svg";
-    // } else {
-    //   if (result === "pass" || result === "average") {
-    //     return "/images/check.svg";
-    //   } else return "/images/fail.svg";
-    // }
   };
   return (
     <div className="w-24 h-[71px] rounded-[10px] bg-[var(--background)] px-5 py-3">

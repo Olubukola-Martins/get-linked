@@ -32,9 +32,9 @@ const Timer = () => {
   };
 
   return (
-    <div className="bg-[var(--deepGrey-bg)] py-2 px-4 rounded-lg flex gap-2">
+    <div className="bg-[var(--deepGrey-bg)] py-2 sm:px-4 px-2 rounded-lg flex gap-2">
       <Image width={16} height={16} alt="timer" src={"/images/timer.svg"} />
-      <p className="text-lg text-[var(--app-purple)]">{formatTime(totalSeconds)} time left</p>
+      <p className="text-sm sm:text-lg text-[var(--app-purple)]">{formatTime(totalSeconds)} time left</p>
     </div>
   );
 };

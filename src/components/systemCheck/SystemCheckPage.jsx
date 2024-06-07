@@ -264,22 +264,26 @@ const SystemCheckPage = () => {
           </Button>
         </div>
       </Modal>
-      <div className="bg-white rounded-[20px] px-12 py-9 mx-auto w-[61vw] flex flex-col gap-10">
+      <div className="bg-white rounded-[20px] px-[2vw] sm:px-12 py-9 mx-auto w-5/6 sm:w-[61vw] flex flex-col gap-10">
         <div>
           <h1 className="font-semibold text-xl pb-2">System check</h1>
           <p className="text-sm ">We utilize your camera image to ensure fairness for all participants, and we also employ both your camera and microphone for a video questions where you will be prompted to record a response using your camera or webcam, so its essential to verify that your camera and microphone are functioning correctly and that you have a stable internet connection. To do this, please position yourself in front of your camera, ensuring that your entire face is clearly visible on the screen. This includes your forehead, eyes, ears, nose, and lips. You can initiate a 5-second recording of yourself by clicking the button below.</p>
         </div>
 
-        <div className="flex  gap-6 ">
+        <div className="flex flex-col-reverse lg:flex-row  gap-6 ">
           <div className="relative h-40 w-[275px]">
             {turnOnWebam ? <Webcam ref={webcamRef} className="border rounded-[10px] border-[var(--app-purple)] h-40 w-[275px] absolute " /> : <div></div>} <canvas ref={canvasRef} className="border rounded-[10px] border-[var(--app-purple)] h-40 w-[275px] absolute " />
           </div>
-
-          <div className="relative grid grid-cols-2 gap-3 mr-8">
-            <ProgressCard parameter="Webcam" checkComplete={isCheckDone} result={findMostFrequent(objectData) === "person" ? "pass" : "fail"} key={1} />
-            <ProgressCard parameter="Speed" checkComplete={isCheckDone} result={calculateMean(internetSpeedData) > 600 ? "pass" : "fail"} key={2} />
-            <ProgressCard parameter="Gadget mic" checkComplete={isCheckDone} result={findMostFrequent(miCheckData) === true ? "pass" : "fail"} key={3} />
-            <ProgressCard parameter="Lighting" checkComplete={isCheckDone} result={findMostFrequent(brightnessData) === "medium" ? "average" : findMostFrequent(brightnessData) === "high" ? "pass" : "fail"} key={4} />
+          {/* mr-8 */}
+          <div className="relative grid grid-cols-2 gap-3 w-[275px] lg:w-fit ">
+            <>
+              <ProgressCard parameter="Webcam" checkComplete={isCheckDone} result={findMostFrequent(objectData) === "person" ? "pass" : "fail"} key={1} />
+              <ProgressCard parameter="Speed" checkComplete={isCheckDone} result={calculateMean(internetSpeedData) > 600 ? "pass" : "fail"} key={2} />
+            </>
+            <>
+              <ProgressCard parameter="Gadget mic" checkComplete={isCheckDone} result={findMostFrequent(miCheckData) === true ? "pass" : "fail"} key={3} />
+              <ProgressCard parameter="Lighting" checkComplete={isCheckDone} result={findMostFrequent(brightnessData) === "medium" ? "average" : findMostFrequent(brightnessData) === "high" ? "pass" : "fail"} key={4} />
+            </>
           </div>
         </div>
         {/* Button for systemcheck */}
